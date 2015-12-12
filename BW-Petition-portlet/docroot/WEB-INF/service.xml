@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+<service-builder package-path="org.blisswisdom">
+	<author>Danny</author>
+	<namespace>bw</namespace>
+
+<!-- asset reqiure uuid -->
+	<entity name="Petition" local-service="true" remote-service="false" uuid="true">
+
+		<column name="petitionId" type="long" primary="true" />
+
+		<column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />		
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="petitionNumber" type="String" />	<!-- 文號 -->
+		<column name="publishDate" type="Date" />		<!-- 發文日期 -->
+		<column name="signUnit" type="String" />		<!-- 簽辦單位 -->
+		<column name="signer" type="String" />			<!-- 簽辦人 -->		
+		<column name="designee" type="String" />		<!-- 受文者 -->
+		<column name="plusSign" type="String" />		<!-- 加簽對象  --><!-- Deprecated -->
+		<column name="subject" type="String" />			<!-- 主旨 -->
+		<column name="explanation" type="String" />		<!-- 說明 -->
+		
+		<!-- Deprecated(以下5個comments) -->
+		<column name="comments" type="String" />				<!-- 批示意見 -->
+		<column name="commentsByMonk" type="String" />			<!-- 和尚會簽意見 -->
+		<column name="commentsByManagement" type="String" />	<!-- 經管會簽意見 -->
+		<column name="commentsByCEO" type="String" />			<!-- 執行長會簽意見 -->
+		<column name="commentsByAides" type="String" />			<!-- 幕僚單位會簽意見 -->
+		
+		<!-- Kaleo workflow -->
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+
+		<order by="asc">
+			<order-column name="createDate" />
+		</order>
+
+		<finder name="PetitionNumber" return-type="Petition">
+			<finder-column name="petitionNumber" />
+		</finder>
+
+
+		<reference package-path="com.liferay.portal" entity="WorkflowInstanceLink" />
+		<reference package-path="com.liferay.portal" entity="Resource" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetTag" />
+	</entity>
+	
+	
+<!-- 受文附件 -->
+	<entity name="Attachment" local-service="true" remote-service="false">
+
+		<column name="attachmentId" type="long" primary="true" />
+		<column name="petitionId" type="long" />
+		<column name="userId" type="long" />
+		<column name="attachmentEntryId" type="long" />
+		<column name="attachmentName" type="String" />
+
+		<order by="asc">
+			<order-column name="attachmentId" />
+		</order>
+
+		<finder name="PetitionId" return-type="Collection">
+			<finder-column name="petitionId" />
+		</finder>
+		<finder name="AttachmentEntryId" return-type="Attachment">
+			<finder-column name="attachmentEntryId" />
+		</finder>
+		
+	</entity>
+	
+
+<!-- 會簽意見更新紀錄 -->
+	<entity name="CommentsUpdate" local-service="true" remote-service="false">
+
+		<column name="commentsUpdateId" type="long" primary="true" />
+		<column name="petitionId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="commentsType" type="String" />
+		<column name="commentsContent" type="String" />
+		<column name="updateTime" type="Date" />
+
+		<order by="asc">
+			<order-column name="commentsUpdateId" />
+		</order>
+
+		<finder name="PetitionId" return-type="Collection">
+			<finder-column name="petitionId" />
+		</finder>
+		<finder name="P_C" return-type="Collection">
+			<finder-column name="petitionId" />
+			<finder-column name="commentsType" />
+		</finder>
+
+	</entity>
+	
+<!-- 呈文加簽對象 -->
+	<entity name="PlusSigner" local-service="true" remote-service="false">
+
+		<column name="plusSignerId" type="long" primary="true" />
+		<column name="petitionId" type="long" />
+		<column name="userId" type="long" />				<!-- 建立者ID -->
+		<column name="userName" type="String" />			<!-- 建立者 -->
+		<column name="signerId" type="long" />				<!-- 加簽人ID -->
+		<column name="signerName" type="String" />			<!-- 加簽人 -->
+		<column name="signerType" type="String" />			<!-- 加簽人型態,ex: 執行長、經管會 -->
+		<column name="createDate" type="Date" />	
+
+		<order by="asc">
+			<order-column name="createDate" />
+		</order>
+
+		<finder name="PetitionId" return-type="Collection">
+			<finder-column name="petitionId" />
+		</finder>
+		<finder name="P_S" return-type="Collection">
+			<finder-column name="petitionId" />
+			<finder-column name="signerType" />
+		</finder>
+
+	</entity>
+	
+	
+</service-builder>

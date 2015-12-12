@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<xml-mapping-metadata-complete/>
+		<persistence-unit-defaults>
+			<access>PROPERTY</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<mapped-superclass class="org.blisswisdom.model.impl.AttachmentModelImpl">
+		<attributes>
+			<id name="attachmentId" />
+			<basic name="petitionId" />
+			<basic name="userId" />
+			<basic name="attachmentEntryId" />
+			<basic name="attachmentName" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.blisswisdom.model.impl.CommentsUpdateModelImpl">
+		<attributes>
+			<id name="commentsUpdateId" />
+			<basic name="petitionId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="commentsType" />
+			<basic name="commentsContent" />
+			<basic name="updateTime">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.blisswisdom.model.impl.PetitionModelImpl">
+		<attributes>
+			<id name="petitionId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="companyId" />
+			<basic name="groupId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="petitionNumber" />
+			<basic name="publishDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="signUnit" />
+			<basic name="signer" />
+			<basic name="designee" />
+			<basic name="plusSign" />
+			<basic name="subject" />
+			<basic name="explanation" />
+			<basic name="comments" />
+			<basic name="commentsByMonk" />
+			<basic name="commentsByManagement" />
+			<basic name="commentsByCEO" />
+			<basic name="commentsByAides" />
+			<basic name="status" />
+			<basic name="statusByUserId" />
+			<basic name="statusByUserName" />
+			<basic name="statusDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="statusByUserUuid" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.blisswisdom.model.impl.PlusSignerModelImpl">
+		<attributes>
+			<id name="plusSignerId" />
+			<basic name="petitionId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="signerId" />
+			<basic name="signerName" />
+			<basic name="signerType" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<entity class="org.blisswisdom.model.impl.AttachmentImpl" name="Attachment">
+		<table name="bw_Attachment" />
+		<attributes />
+	</entity>
+	<entity class="org.blisswisdom.model.impl.CommentsUpdateImpl" name="CommentsUpdate">
+		<table name="bw_CommentsUpdate" />
+		<attributes />
+	</entity>
+	<entity class="org.blisswisdom.model.impl.PetitionImpl" name="Petition">
+		<table name="bw_Petition" />
+		<attributes />
+	</entity>
+	<entity class="org.blisswisdom.model.impl.PlusSignerImpl" name="PlusSigner">
+		<table name="bw_PlusSigner" />
+		<attributes />
+	</entity>
+</entity-mappings>

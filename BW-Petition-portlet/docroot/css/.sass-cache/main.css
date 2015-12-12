@@ -1,0 +1,31 @@
+.BW-Petition-portlet {
+  /*	searchContainer col */ }
+  .BW-Petition-portlet .petition-form table {
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    width: 90%; }
+  .BW-Petition-portlet .petition-form table td, .BW-Petition-portlet .petition-form table th {
+    padding: 5px;
+    border: 1px solid #fff;
+    border-width: 0 1px 1px 0; }
+  .BW-Petition-portlet .petition-form tbody th {
+    text-align: center;
+    background: rgba(212, 173, 145, 0.5); }
+  .BW-Petition-portlet .petition-form tbody td {
+    background: rgba(212, 173, 145, 0.3); }
+  .BW-Petition-portlet .petition-form tbody tr:hover td {
+    background: rgba(212, 173, 145, 0.4); }
+  .BW-Petition-portlet .petition-form .text-content {
+    margin-left: 35px; }
+  .BW-Petition-portlet .petition-form .control-group {
+    margin-bottom: 0px !important; }
+  .BW-Petition-portlet .col-rowChecker {
+    width: 50px;
+    max-width: 50px; }
+  .BW-Petition-portlet .col-action {
+    width: 90px;
+    max-width: 90px; }
+  .BW-Petition-portlet .col-subject {
+    width: 320px;
+    max-width: 320px; }
+

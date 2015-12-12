@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="org.blisswisdom.service.AttachmentLocalService" class="org.blisswisdom.service.impl.AttachmentLocalServiceImpl" />
+	<bean id="org.blisswisdom.service.persistence.AttachmentPersistence" class="org.blisswisdom.service.persistence.AttachmentPersistenceImpl" parent="basePersistence" />
+	<bean id="org.blisswisdom.service.CommentsUpdateLocalService" class="org.blisswisdom.service.impl.CommentsUpdateLocalServiceImpl" />
+	<bean id="org.blisswisdom.service.persistence.CommentsUpdatePersistence" class="org.blisswisdom.service.persistence.CommentsUpdatePersistenceImpl" parent="basePersistence" />
+	<bean id="org.blisswisdom.service.PetitionLocalService" class="org.blisswisdom.service.impl.PetitionLocalServiceImpl" />
+	<bean id="org.blisswisdom.service.persistence.PetitionPersistence" class="org.blisswisdom.service.persistence.PetitionPersistenceImpl" parent="basePersistence" />
+	<bean id="org.blisswisdom.service.PlusSignerLocalService" class="org.blisswisdom.service.impl.PlusSignerLocalServiceImpl" />
+	<bean id="org.blisswisdom.service.persistence.PlusSignerPersistence" class="org.blisswisdom.service.persistence.PlusSignerPersistenceImpl" parent="basePersistence" />
+</beans>

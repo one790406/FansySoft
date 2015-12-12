@@ -1,0 +1,733 @@
+<?xml version="1.0"?>
+<workflow-definition xmlns="urn:liferay.com:liferay-workflow_6.2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd">
+	<name>福智(動態)</name>
+	<description>
+																																																																											</description>
+	<version>1</version>
+	<condition>
+		<name>發起人角色判斷</name>
+		<metadata>
+				<![CDATA[{"xy":[12,109]}]]>
+</metadata>
+		<script>
+<![CDATA[
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
+
+long userId = GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
+ServiceContext serviceContext = (ServiceContext) workflowContext.get("serviceContext");
+long bwCEORoleId = GetterUtil.getLong((String)serviceContext.getAttribute("bwCEORoleId"));
+long bwManagementRoleId = GetterUtil.getLong((String)serviceContext.getAttribute("bwManagementRoleId"));
+long companyId = serviceContext.getCompanyId();
+Role adminRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.ADMINISTRATOR);
+
+System.out.println("發起人角色判斷userId: " + userId);
+	
+if(RoleLocalServiceUtil.hasUserRole(userId, bwCEORoleId)){
+	returnValue = "執行長,管理員 發起";
+}
+else if(RoleLocalServiceUtil.hasUserRole(userId, adminRole.getRoleId())){
+	returnValue = "執行長,管理員 發起";
+}
+else if(RoleLocalServiceUtil.hasUserRole(userId, bwManagementRoleId)){
+	returnValue = "經管會發起";
+}
+else{
+	returnValue = "error";
+}
+
+]]>
+			</script>
+		<script-language>groovy</script-language>
+		<transitions>
+			<transition>
+				<name>執行長,管理員 發起</name>
+				<target>幕僚長判定，是否請幕僚單位加簽</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>經管會發起</name>
+				<target>加簽對象指定</target>
+				<default>false</default>
+			</transition>
+		</transitions>
+	</condition>
+	<condition>
+		<name>0是否請執行長加簽</name>
+		<metadata>
+				<![CDATA[{"xy":[11,346]}]]>
+</metadata>
+		<script>
+<![CDATA[
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.service.ServiceContext;
+
+ServiceContext serviceContext = (ServiceContext) workflowContext.get("serviceContext");
+int ceoPlusCount = GetterUtil.getInteger((String)serviceContext.getAttribute("ceoPlusCount"));
+System.out.println("ceoPlusCount: " + ceoPlusCount);
+
+if(ceoPlusCount > 0){
+	returnValue = "是";
+	System.out.println(returnValue);
+}else{
+	returnValue = "c合併";
+	System.out.println(returnValue);
+}
+]]>
+			</script>
+		<script-language>groovy</script-language>
+		<transitions>
+			<transition>
+				<name>是</name>
+				<target>b執行長填寫會簽意見</target>
+				<default>false</default>
+			</transition>
+			<transition>
+				<name>c合併</name>
+				<target>c合併</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</condition>
+	<condition>
+		<name>是否請其他經管會委員加簽</name>
+		<metadata>
+				<![CDATA[{"xy":[154,233]}]]>
+</metadata>
+		<script>
+<![CDATA[
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.service.ServiceContext;
+
+ServiceContext serviceContext = (ServiceContext) workflowContext.get("serviceContext");
+int managementPlusCount = GetterUtil.getInteger((String)serviceContext.getAttribute("managementPlusCount"));
+System.out.println("managementPlusCount: " + managementPlusCount);
+
+if(managementPlusCount > 0){
+	returnValue = "是";
+	System.out.println(returnValue);
+}else{
+	returnValue = "c合併";
+	System.out.println(returnValue);
+}
+]]>
+			</script>
+		<script-language>groovy</script-language>
+		<transitions>
+			<transition>
+				<name>c合併</name>
+				<target>c合併</target>
+				<default>false</default>
+			</transition>
+			<transition>
+				<name>是</name>
+				<target>a經管會填寫簽核意見</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</condition>
+	<fork>
+		<name>加簽對象指定</name>
+		<metadata>
+				<![CDATA[{"xy":[11,233]}]]>
+</metadata>
+		<transitions>
+			<transition>
+				<name>fork2</name>
+				<target>0是否請執行長加簽</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>fork1</name>
+				<target>是否請其他經管會委員加簽</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</fork>
+	<join>
+		<name>c合併</name>
+		<metadata>
+<![CDATA[{"xy":[376.015625,457]}]]>
+</metadata>
+		<transitions>
+			<transition>
+				<name>合併完畢，送至和尚會簽</name>
+				<target>和尚填寫會簽意見</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</join>
+	<state>
+		<name>created(發起簽文)</name>
+		<metadata>
+<![CDATA[{"xy":[21,5]}]]>
+</metadata>
+		<initial>true</initial>
+		<transitions>
+			<transition>
+				<name>發起</name>
+				<target>發起人角色判斷</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>同意</name>
+		<metadata>
+<![CDATA[{"terminal":true,"xy":[885,228]}]]>
+</metadata>
+		<actions>
+			<action>
+				<name>最終同意</name>
+				<description>最終同意</description>
+				<script>
+<![CDATA[Packages.com.liferay.portal.kernel.workflow.WorkflowStatusManagerUtil.updateStatus(Packages.com.liferay.portal.kernel.workflow.WorkflowConstants.getLabelStatus("approved"), workflowContext);]]>
+</script>
+				<script-language>javascript</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+	</state>
+	<state>
+		<name>不同意</name>
+		<metadata>
+<![CDATA[{"terminal":true,"xy":[783,437]}]]>
+</metadata>
+		<actions>
+			<action>
+				<name>拒絕</name>
+				<description>拒絕</description>
+				<script>
+<![CDATA[Packages.com.liferay.portal.kernel.workflow.WorkflowStatusManagerUtil.updateStatus(Packages.com.liferay.portal.kernel.workflow.WorkflowConstants.getLabelStatus("denied"), workflowContext);]]>
+</script>
+				<script-language>javascript</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+	</state>
+	<state>
+		<name>reject(退件)</name>
+		<metadata>
+<![CDATA[{"xy":[379,152]}]]>
+</metadata>
+	</state>
+	<task>
+		<name>幕僚長判定，是否請幕僚單位加簽</name>
+		<description>
+<![CDATA["by幕僚長"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[142,4]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>Review Notification</name>
+				<description>
+</description>
+				<template>
+<![CDATA[${userName} 傳送一則 ${entryType} 給您審核，是否要請幕僚單位加簽?
+										]]>
+			</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_AidesChief</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_AidesChief</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>是，送至幕僚單位會簽</name>
+				<target>幕僚單位填寫會簽意見</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>否，送至幕僚長簽核此文</name>
+				<target>幕僚長判定，是否同意此簽文</target>
+				<default>false</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>幕僚長判定，是否同意此簽文</name>
+		<description>
+		<![CDATA["by幕僚長"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[360,6]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>是否同意此簽文通過</name>
+				<description>
+</description>
+				<template>
+<![CDATA[是否同意此簽文通過]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_AidesChief</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_AidesChief</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>不同意(退件)</name>
+				<target>reject(退件)</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>同意，送至經管會會簽意見</name>
+				<target>0是否請其他經管會委員加簽?</target>
+				<default>false</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>幕僚單位填寫會簽意見</name>
+		<metadata>
+<![CDATA[{"xy":[144,121]}]]>
+</metadata>
+		<actions>
+			<action>
+				<name>
+</name>
+				<description>
+</description>
+				<script>
+<![CDATA[]]>
+</script>
+				<script-language>javascript</script-language>
+				<execution-type>onAssignment</execution-type>
+			</action>
+			<notification>
+				<name>幕僚單位請填寫加簽意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[幕僚單位請填寫加簽意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Aides</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Aides</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>幕僚單位會簽意見填寫完畢，送至幕僚長簽核此文</name>
+				<target>幕僚長判定，是否同意此簽文</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>和尚填寫會簽意見</name>
+		<description>
+<![CDATA["by和尚"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[563,219]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>和尚請填寫加簽意見。</name>
+				<description>
+</description>
+				<template>
+<![CDATA[請填寫加簽意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Monk</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Monk</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>和尚填寫會簽完畢，送至上師、秘書處填寫批示意見。</name>
+				<target>c上師、秘書處，填寫批示意見</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>0是否請其他經管會委員加簽?</name>
+		<description>
+<![CDATA["by經管會委員"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[560.9722290039062,7.934028625488281]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>是否請其他經管會委員加簽</name>
+				<description>
+</description>
+				<template>
+<![CDATA[是否請其他經管會委員加簽?]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Management</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Management</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>是，送至其他經管會委員進行加簽</name>
+				<target>填寫簽核中簽核意見</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>否，送至和尚會簽意見</name>
+				<target>和尚填寫會簽意見</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>填寫簽核中簽核意見</name>
+		<description>
+<![CDATA["by經管會委員"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[755.9896240234375,10.017356872558594]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>經管會委員填寫簽核意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[經管會委員填寫簽核意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Management</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Management</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>經管會意見填寫完畢，送至和尚會簽</name>
+				<target>和尚填寫會簽意見</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>c上師、秘書處，填寫批示意見</name>
+		<description>
+<![CDATA["by上師、秘書處"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[569,424]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>上師、秘書處，填寫批示意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[上師、秘書處，填寫批示意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Guru</name>
+							<auto-create>true</auto-create>
+						</role>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Secretariat</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Guru</name>
+					<auto-create>true</auto-create>
+				</role>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Secretariat</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>送至上師、秘書處，判定是否結案。</name>
+				<target>上師、秘書處，判定結案</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>上師、秘書處，判定結案</name>
+		<description>
+<![CDATA["by上師、秘書室"]]>
+</description>
+		<metadata>
+<![CDATA[{"xy":[754.015625,219]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>上師、秘書處，填寫簽呈批示意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[上師、秘書處，填寫簽呈批示意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Guru</name>
+							<auto-create>true</auto-create>
+						</role>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Secretariat</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Guru</name>
+					<auto-create>true</auto-create>
+				</role>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Secretariat</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>不同意</name>
+				<target>不同意</target>
+				<default>false</default>
+			</transition>
+			<transition>
+				<name>同意</name>
+				<target>同意</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>a經管會填寫簽核意見</name>
+		<metadata>
+<![CDATA[{"xy":[370.98956298828125,231.99652099609375]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>經管會委員填寫簽核意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[經管會委員填寫簽核意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_Management</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_Management</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>a經管會簽核填寫完畢</name>
+				<target>c合併</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>b執行長填寫會簽意見</name>
+		<metadata>
+<![CDATA[{"xy":[9,454]}]]>
+</metadata>
+		<actions>
+			<notification>
+				<name>執行長填寫會簽意見</name>
+				<description>
+</description>
+				<template>
+<![CDATA[執行長填寫會簽意見。]]>
+</template>
+				<template-language>freemarker</template-language>
+				<notification-type>user-notification</notification-type>
+				<recipients>
+					<roles>
+						<role>
+							<role-type>regular</role-type>
+							<name>BW_CEO</name>
+							<auto-create>true</auto-create>
+						</role>
+					</roles>
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>BW_CEO</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>b執行長會簽填寫完畢</name>
+				<target>c合併</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</task>
+</workflow-definition>

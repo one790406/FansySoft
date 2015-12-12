@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false" auto-import="false">
+	<import class="org.blisswisdom.model.Attachment" />
+	<import class="org.blisswisdom.model.CommentsUpdate" />
+	<import class="org.blisswisdom.model.Petition" />
+	<import class="org.blisswisdom.model.PlusSigner" />
+	<class name="org.blisswisdom.model.impl.AttachmentImpl" table="bw_Attachment">
+		<cache usage="read-write" />
+		<id name="attachmentId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="petitionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="attachmentEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="attachmentName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="org.blisswisdom.model.impl.CommentsUpdateImpl" table="bw_CommentsUpdate">
+		<cache usage="read-write" />
+		<id name="commentsUpdateId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="petitionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsContent" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="updateTime" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="org.blisswisdom.model.impl.PetitionImpl" table="bw_Petition">
+		<cache usage="read-write" />
+		<id name="petitionId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="petitionNumber" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="publishDate" type="org.hibernate.type.TimestampType" />
+		<property name="signUnit" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="signer" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="designee" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="plusSign" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="subject" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="explanation" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsByMonk" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsByManagement" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsByCEO" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="commentsByAides" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="statusByUserId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="statusByUserName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="statusDate" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="org.blisswisdom.model.impl.PlusSignerImpl" table="bw_PlusSigner">
+		<cache usage="read-write" />
+		<id name="plusSignerId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="petitionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="signerId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="signerName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="signerType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+	</class>
+</hibernate-mapping>

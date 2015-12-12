@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="org.blisswisdom.model.Attachment">
+		<field name="attachmentId" type="long" />
+		<field name="petitionId" type="long" />
+		<field name="userId" type="long" />
+		<field name="attachmentEntryId" type="long" />
+		<field name="attachmentName" type="String" />
+	</model>
+	<model name="org.blisswisdom.model.CommentsUpdate">
+		<field name="commentsUpdateId" type="long" />
+		<field name="petitionId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="commentsType" type="String" />
+		<field name="commentsContent" type="String" />
+		<field name="updateTime" type="Date" />
+	</model>
+	<model name="org.blisswisdom.model.Petition">
+		<field name="uuid" type="String" />
+		<field name="petitionId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="petitionNumber" type="String" />
+		<field name="publishDate" type="Date" />
+		<field name="signUnit" type="String" />
+		<field name="signer" type="String" />
+		<field name="designee" type="String" />
+		<field name="plusSign" type="String" />
+		<field name="subject" type="String" />
+		<field name="explanation" type="String" />
+		<field name="comments" type="String" />
+		<field name="commentsByMonk" type="String" />
+		<field name="commentsByManagement" type="String" />
+		<field name="commentsByCEO" type="String" />
+		<field name="commentsByAides" type="String" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+	</model>
+	<model name="org.blisswisdom.model.PlusSigner">
+		<field name="plusSignerId" type="long" />
+		<field name="petitionId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="signerId" type="long" />
+		<field name="signerName" type="String" />
+		<field name="signerType" type="String" />
+		<field name="createDate" type="Date" />
+	</model>
+</model-hints>
